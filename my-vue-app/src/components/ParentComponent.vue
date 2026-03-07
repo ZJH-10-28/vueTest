@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script>
+<!-- <script>
 import ChildComponent from './ChildComponent.vue';
 
 export default {
@@ -33,7 +33,25 @@ export default {
     }
   }
 }
+</script> -->
+
+<script setup>
+import { ref } from 'vue'
+import ChildComponent from './ChildComponent.vue';
+
+const messageFromChild = ref('')
+const messageToChild = ref('')
+
+function handleChildMessage (payload) {
+    this.messageFromChild = payload;
+  };
+    
+function sendToChild () {
+    this.messageToChild = "aaaaaaaa";
+  };
 </script>
+
+
 <style scoped>
 .Parentlogo {
   background-color: rgb(176, 212, 200);
