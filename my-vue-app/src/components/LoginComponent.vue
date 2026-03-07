@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleLogin" class="login-form">
   <div class ="login-container">
-    <label>Login:</label>
+    <label>UserName:</label>
     <input id="username"
           type="text"
           v-model="form.username"
@@ -15,13 +15,18 @@
           placeholder="请输入密码"
           required>
   </div>
+  <div>
+    <button class="Login">Login</button>
+  </div>
   </form>
+  <ParentComponent/>
 </template>
 
 <!-- setup 自动暴露顶层绑定 -->
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
+import ParentComponent from '../components/ParentComponent.vue';
 
 // 响应式数据
 const form = ref({
@@ -62,5 +67,9 @@ const handleLogin = async () => {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.Login {
+  background-color: rgb(57, 137, 241);
 }
 </style>
