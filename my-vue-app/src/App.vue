@@ -1,14 +1,11 @@
 <script setup>
-import ChildComponent from './components/ChildComponent.vue';
-import HelloWorld from './components/HelloWorld.vue'
 import LoginComponent from './components/LoginComponent.vue';
-import MyVue from './components/MyVue.vue';
 import ParentComponent from './components/ParentComponent.vue';
 </script>
 
 <template>
   <div>
-    <a href="https://vuejs.org/" target="_blank">
+    <a>
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>

@@ -20,7 +20,8 @@ export default {
   },
   data() {
     return {
-      messageFromChild: ''
+      messageFromChild: '',
+      messageToChild: ''
     };
   },
   methods: {
