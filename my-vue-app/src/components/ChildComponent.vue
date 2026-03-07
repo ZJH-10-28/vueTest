@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>子组件收到的消息：{{ messageFromParent }}</p>
-    <button @click="sendToParent">向父组件发送消息</button>
+    <button class="Childlogo" @click="sendToParent">向父组件发送消息</button>
   </div>
 </template>
 
@@ -21,3 +21,11 @@ export default {
   }
 }
 </script>
+<style scoped>
+.Childlogo {
+  background-color: rgb(215, 200, 233);
+}
+.Childlogo:hover {
+  filter: drop-shadow(0 0 2em #2fa749aa);
+}
+</style>

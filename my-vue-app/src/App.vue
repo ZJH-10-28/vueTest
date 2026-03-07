@@ -1,19 +1,21 @@
 <script setup>
+import ChildComponent from './components/ChildComponent.vue';
 import HelloWorld from './components/HelloWorld.vue'
+import LoginComponent from './components/LoginComponent.vue';
 import MyVue from './components/MyVue.vue';
+import ParentComponent from './components/ParentComponent.vue';
 </script>
 
 <template>
   <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
     <a href="https://vuejs.org/" target="_blank">
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <HelloWorld msg="Vue" />
-  <MyVue msg1="MyVue" />
+  <!-- <HelloWorld msg="Vue" />
+  <MyVue msg1="MyVue" /> -->
+  <LoginComponent/>
+  <ParentComponent/>
 </template>
 
 <style scoped>
