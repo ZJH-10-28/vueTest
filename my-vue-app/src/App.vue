@@ -1,5 +1,4 @@
 <script setup>
-import LoginComponent from './components/LoginComponent.vue';
 </script>
 
 <template>
@@ -8,9 +7,6 @@ import LoginComponent from './components/LoginComponent.vue';
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <!-- <HelloWorld msg="Vue" />
-  <MyVue msg1="MyVue" /> -->
-  <LoginComponent/>
 </template>
 
 <style scoped>
