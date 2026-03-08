@@ -27,21 +27,20 @@
       <p v-if="success" style="color: green">{{ success }}</p>
   </div>
   </form>
-  <!-- <ParentComponent/> -->
 </template>
 
 <!-- setup 自动暴露顶层绑定 -->
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
-import ParentComponent from '../components/ParentComponent.vue';
+import { useRouter } from 'vue-router'
 
 // 响应式数据
 const form = ref({
   username: '',
   password: ''
 })
-
+const router = useRouter()
 const error = ref('')
 const success = ref('')
 
@@ -61,11 +60,13 @@ const handleLogin = async () => {
     if(response.data.isSuccess){
     // 保存 token 到 localStorage
     localStorage.setItem('token', response.data.token)
+    error.value = ''
     success.value = response.data.message + 'Token:' + response.data.token
     // 跳转
-    // router.push('/dashboard')
+    router.push('/parent')
     }else{
     error.value = response.data.message
+    success.value = ''
     }
     console.log('Token:', response.data.token)
 

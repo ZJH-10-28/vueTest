@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import './style.css'
-import LoginComponent from './components/LoginComponent.vue'
+import App from './App.vue'
+import DuJiaCun_Router from './router/DuJiaCun_Router'
 
-createApp(LoginComponent).mount('#DuJiaCun')
+createApp(App).use(DuJiaCun_Router).mount('#DuJiaCun')
