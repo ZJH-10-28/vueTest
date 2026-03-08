@@ -1,26 +1,23 @@
 <template>
   <div>
-    <p>子组件收到的消息：{{ messageFromParent }}</p>
+    <h2>子组件</h2>
+    <p>子组件收到的消息：{{ dataFromParent }}</p>
     <button class="Childlogo" @click="sendToParent">向父组件发送消息</button>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ChildComponent',
-  props: {
-    messageFromParent: {
-      type: String,
-      required: true
-    }
-  },
-  methods: {
-    sendToParent() {
-      this.$emit('message-from-child', 'Hello from child!');
-    }
-  }
+<script setup>
+import { inject } from 'vue'
+
+// 注入父组件提供的数据
+const dataFromParent = inject('msgData')
+const dataToParent = inject('msgDataFromChild')
+
+function sendToParent() {
+  dataToParent('message-from-child', 'Hello from child!');
 }
 </script>
+
 <style scoped>
 .Childlogo {
   background-color: rgb(215, 200, 233);

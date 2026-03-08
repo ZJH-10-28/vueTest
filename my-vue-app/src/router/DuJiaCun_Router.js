@@ -1,6 +1,8 @@
 import { createWebHistory, createRouter } from 'vue-router'
 import LoginComponent from "../components/LoginComponent.vue";
 import ParentComponent from "../components/ParentComponent.vue";
+import WelcomeComponent from '../components/WelcomeComponent.vue';
+import ChildComponent from '../components/ChildComponent.vue';
 
 // 1. 定义路由规则：路径 ↔ 组件
 const routes = [
@@ -10,9 +12,34 @@ const routes = [
     meta: { requiresAuth: false} // 登录页不需要认证
   }, 
   { 
-    path: '/parent', 
-    component: ParentComponent ,
-    meta: { requiresAuth: true} // 登录页需要认证
+    path: '/login', 
+    component: LoginComponent ,
+    meta: { requiresAuth: false} // 登录页不需要认证
+  }, 
+  { 
+    path: '/welcome', 
+    component: WelcomeComponent ,
+    meta: { requiresAuth: true}, // 登录页需要认证
+    // 嵌套路由
+    children: [ 
+      {
+      path: '/parent', 
+      component: ParentComponent ,
+      children: [
+        { 
+          path: '/child', 
+          component: ChildComponent ,
+          meta: { requiresAuth: true}
+        },
+       ]
+    },
+    { 
+      path: '/child', 
+      component: ChildComponent ,
+      meta: { requiresAuth: true}
+    },
+    ]
+
   },
 ]
 

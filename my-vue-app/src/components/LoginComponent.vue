@@ -63,7 +63,7 @@ const handleLogin = async () => {
     error.value = ''
     success.value = response.data.message + 'Token:' + response.data.token
     // 跳转
-    router.push('/parent')
+    router.push('/welcome')
     }else{
     error.value = response.data.message
     success.value = ''
