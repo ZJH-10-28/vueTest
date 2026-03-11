@@ -34,6 +34,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import request from '../commonUtils/commonRequest'
 
 // 响应式数据
 const form = ref({
@@ -52,7 +53,7 @@ const handleLogin = async () => {
 
   try {
     // 发送 POST 请求到后端
-    const response = await axios.post('http://localhost:8080/User/userLogin', {
+    const response = await request.post('http://localhost:8080/User/userLogin', {
       userName: form.value.username,
       passWord: form.value.password
     })

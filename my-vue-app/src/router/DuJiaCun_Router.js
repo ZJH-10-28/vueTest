@@ -50,21 +50,21 @@ const DuJiaCun_Router = createRouter({
 })
 
 //路由守卫
-// DuJiaCun_Router.beforeEach((to, from, next) => {
-//   const token = localStorage.getItem('token')
-//   const requiresAuth = to.meta.requiresAuth
+DuJiaCun_Router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+  const requiresAuth = to.meta.requiresAuth
 
-//   if (requiresAuth && !token) {
-//     // 需要登录但未登录 → 跳转到登录页
-//     next('/')
-//   } else if (to.path === '/' && token) {
-//     // 已登录用户访问登录页 → 跳转到主页
-//     next('/welcome')
-//   } else {
-//     // 其他情况正常放行
-//     next()
-//   }
-// })
+  if (requiresAuth && !token) {
+    // 需要登录但未登录 → 跳转到登录页
+    next('/')
+  } else if (to.path === '/' && token) {
+    // 已登录用户访问登录页 → 跳转到主页
+    next('/welcome')
+  } else {
+    // 其他情况正常放行
+    next()
+  }
+})
 
 // 3. 导出，供 main.js 使用
 export default DuJiaCun_Router
