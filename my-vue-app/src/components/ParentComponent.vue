@@ -4,14 +4,29 @@
     <button class="Parentlogo" @click="sendToChild">向子组件发送消息</button>
     <p>来自子组件的消息：{{ messageFromChild }}</p>
   </div>
+  <div>
+    <h2>组件A</h2>
+    <input v-model="inputText" placeholder="输入要发送的消息" />
+    <button @click="sendMessage">发送消息</button>
+    <p>当前计数：{{ store.count }}</p>
+    <button @click="store.increment()">+1 计数</button>
+  </div>
   <router-view />
 </template>
 
 <script setup>
 import { ref , provide  } from 'vue'
+import { useMessageStore } from '../stores/message'
 
 const messageFromChild = ref('')
 const messageToChild = ref('')
+
+const store = useMessageStore()
+const inputText = ref('')
+function sendMessage() {
+  store.updateContent(inputText.value)
+  inputText.value = ''
+}
 
 // 提供数据给所有后代（包括子路由组件）
 provide('msgData', messageToChild)

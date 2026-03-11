@@ -4,14 +4,22 @@
     <p>子组件收到的消息：{{ dataFromParent }}</p>
     <button class="Childlogo" @click="sendToParent">向父组件发送消息</button>
   </div>
+    <div>
+    <h2>组件B</h2>
+    <p>收到的消息：{{ store.content }}</p>
+    <p>当前计数：{{ store.count }}</p>
+  </div>
 </template>
 
 <script setup>
 import { inject } from 'vue'
+import { useMessageStore } from '../stores/message'
 
 // 注入父组件提供的数据
 const dataFromParent = inject('msgData')
 const dataToParent = inject('msgDataFromChild')
+
+const store = useMessageStore()
 
 function sendToParent() {
   dataToParent('message-from-child', 'Hello from child!');

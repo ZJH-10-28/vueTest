@@ -23,11 +23,11 @@ const routes = [
     // 嵌套路由
     children: [ 
       {
-      path: '/parent', 
+      path: '/welcome/parent', 
       component: ParentComponent ,
       children: [
         { 
-          path: '/child', 
+          path: '/welcome/child', 
           component: ChildComponent ,
           meta: { requiresAuth: true}
         },
@@ -59,7 +59,7 @@ const DuJiaCun_Router = createRouter({
 //     next('/')
 //   } else if (to.path === '/' && token) {
 //     // 已登录用户访问登录页 → 跳转到主页
-//     next('/parent')
+//     next('/welcome')
 //   } else {
 //     // 其他情况正常放行
 //     next()
