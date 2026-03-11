@@ -53,7 +53,7 @@ const handleLogin = async () => {
 
   try {
     // 发送 POST 请求到后端
-    const response = await request.post('http://localhost:8080/User/userLogin', {
+    const response = await request.post('http://localhost:8080/user/userLogin', {
       userName: form.value.username,
       passWord: form.value.password
     })

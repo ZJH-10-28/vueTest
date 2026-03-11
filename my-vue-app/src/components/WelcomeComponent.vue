@@ -6,7 +6,7 @@
     <router-link to="/welcome/parent">父组件</router-link> | 
     <router-link to="/welcome/child">子组件</router-link>
   </nav>
-    <button class="Login" @click="testButton">Test</button>
+    <button class="Login" @click="testButton">报错退出登录</button>
       <p v-if="error" style="color: red">{{ error }}</p>
       <p v-if="success" style="color: green">{{ success }}</p>
   <router-view />
