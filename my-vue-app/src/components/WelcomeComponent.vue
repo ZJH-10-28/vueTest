@@ -77,6 +77,7 @@ const queryById = async () => {
     error.value = ''
     success.value = 'getGoods successful'
     }else{
+    responseGoods.value = response.data
     error.value = response.data.message
     success.value = ''
     }
