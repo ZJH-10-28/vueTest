@@ -1,4 +1,5 @@
 <template>
+      <p v-if="loginStatus" style="color: red">{{loginStatus}}</p>
   <div>
     <a>
       <img src="../assets/vue.svg" class="logo vue" alt="Vue logo" />
@@ -31,7 +32,7 @@
 
 <!-- setup 自动暴露顶层绑定 -->
 <script setup>
-import { ref } from 'vue'
+import { ref , onMounted } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import request from '../commonUtils/commonRequest'
@@ -44,6 +45,13 @@ const form = ref({
 const router = useRouter()
 const error = ref('')
 const success = ref('')
+const loginStatus = ref(null)
+
+//初始化
+onMounted(() => {
+  const status = localStorage.getItem('loginStatus')
+  loginStatus.value = status // 或 JSON.parse(status) 如果存的是对象
+})
 
 // 登录方法
 const handleLogin = async () => {

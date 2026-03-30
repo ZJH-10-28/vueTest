@@ -30,7 +30,8 @@ request.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // token 无效或过期，跳转到登录页
-      localStorage.removeItem('token')
+      localStorage.clear()
+      localStorage.setItem('loginStatus', '请重新登录')
       window.location.href = '/login'
     }
     return Promise.reject(error)
