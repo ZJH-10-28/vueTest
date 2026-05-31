@@ -89,7 +89,7 @@ const handleLogin = async () => {
 
     if(response.data.code === 200){
     // 保存 token 到 localStorage
-    localStorage.setItem('token', response.data.token)
+    localStorage.setItem('token', response.data.data.token)
     error.value = ''
     success.value = response.data.message + 'Token:' + response.data.token
     // 跳转

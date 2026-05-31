@@ -25,10 +25,10 @@
       </thead>
       <tbody>
         <tr>
-          <td>{{ responseGoods.goodsId }}</td>
-          <td>{{ responseGoods.goodsName }}</td>
-          <td>{{ responseGoods.goodsPrice }}</td>
-          <td>{{ responseGoods.goodsStock }}</td>
+          <td>{{ responseGoods.orderId }}</td>
+          <td>{{ responseGoods.orderName }}</td>
+          <td>{{ responseGoods.orderPrice }}</td>
+          <td>{{ responseGoods.orderNum }}</td>
           <td>{{ responseGoods.goodsDescription }}</td>
         </tr>
       </tbody>
@@ -49,10 +49,10 @@ const responseGoods = ref(null)
 const testButton = async () => {
   try {
     // 发送 POST 请求到后端
-    const response = await request.post('/user/test', {
+    const response = await request.post('/user/test?name=dujiacun', {
     })
 
-    if(response.data.isSuccess){
+    if(response.data.code === 200){
     error.value = ''
     success.value = 'Test successful'
     }else{
@@ -70,10 +70,10 @@ const testButton = async () => {
 const queryById = async () => {
   try {
     // 发送 get 请求到后端
-    const response = await request.get(`http://localhost:8080/goods/${shopId.value}`)
+    const response = await request.get(`/order/${shopId.value}?name=dujiacun`)
 
-    if(response.data){
-    responseGoods.value = response.data
+    if(response.data.code === 200){
+    responseGoods.value = response.data.data
     error.value = ''
     success.value = 'getGoods successful'
     }else{

@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // 创建 axios 实例
 const request = axios.create({
-  baseURL: 'http://localhost:8080', // 后端 API 基地址
+  baseURL: 'http://localhost:12345', // 后端 API 基地址
   timeout: 10000,
 })
 
@@ -11,8 +11,9 @@ request.interceptors.request.use(
   (config) => {
     // 从 localStorage 获取 token
     const token = localStorage.getItem('token')
+    const tokenHeader = localStorage.getItem('tokenHeader')
     if (token) {
-      config.headers['X-Token'] = token
+      config.headers['Authorization'] = tokenHeader + token
     }
     return config
   },
