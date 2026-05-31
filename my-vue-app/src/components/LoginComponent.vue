@@ -59,14 +59,35 @@ const handleLogin = async () => {
   error.value = ''
   success.value = ''
 
-  try {
+  // try {
+  //   // 发送 POST 请求到后端
+  //   // const response = await request.post('http://localhost:8080/user/userLogin', {
+  //     userName: form.value.username,
+  //     passWord: form.value.password
+  //   })
+
+  //   if(response.data.isSuccess){
+  //   // 保存 token 到 localStorage
+  //   localStorage.setItem('token', response.data.token)
+  //   error.value = ''
+  //   success.value = response.data.message + 'Token:' + response.data.token
+  //   // 跳转
+  //   router.push('/welcome')
+  //   }else{
+  //   error.value = response.data.message
+  //   success.value = ''
+  //   }
+  //   console.log('Token:', response.data.token)
+
+  // }
+    try {
     // 发送 POST 请求到后端
-    const response = await request.post('http://localhost:8080/user/userLogin', {
+    const response = await request.post('http://localhost:12345/user/login?name=dujiacun', {
       userName: form.value.username,
       passWord: form.value.password
     })
 
-    if(response.data.isSuccess){
+    if(response.data.code === 200){
     // 保存 token 到 localStorage
     localStorage.setItem('token', response.data.token)
     error.value = ''
@@ -79,7 +100,8 @@ const handleLogin = async () => {
     }
     console.log('Token:', response.data.token)
 
-  }catch (err) {
+  }
+  catch (err) {
     if (err.response) {
       // 后端返回了错误状态码（如 401）
       error.value = err.response?.data || '登录失败，请检查网络'
