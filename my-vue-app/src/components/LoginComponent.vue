@@ -49,8 +49,9 @@ const loginStatus = ref(null)
 
 //初始化
 onMounted(() => {
-  const status = localStorage.getItem('loginStatus')
-  loginStatus.value = status // 或 JSON.parse(status) 如果存的是对象
+  // const status = localStorage.getItem('loginStatus')
+  // loginStatus.value = status // 或 JSON.parse(status) 如果存的是对象
+  localStorage.removeItem('token') 
 })
 
 // 登录方法
@@ -82,7 +83,7 @@ const handleLogin = async () => {
   // }
     try {
     // 发送 POST 请求到后端
-    const response = await request.post('http://localhost:12345/user/login?name=dujiacun', {
+    const response = await request.post('http://localhost:12345/users/login?name=dujiacun', {
       userName: form.value.username,
       passWord: form.value.password
     })
@@ -90,6 +91,7 @@ const handleLogin = async () => {
     if(response.data.code === 200){
     // 保存 token 到 localStorage
     localStorage.setItem('token', response.data.data.token)
+    localStorage.setItem('tokenHeader', response.data.data.tokenHeader)
     error.value = ''
     success.value = response.data.message + 'Token:' + response.data.token
     // 跳转

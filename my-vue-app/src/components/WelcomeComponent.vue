@@ -9,27 +9,25 @@
   <router-view />
     <button class="Login" @click="testButton">报错退出</button>
     <div>
-      <label>商品ID：</label>
+      <label>订单ID：</label>
       <input v-model="shopId">
     </div>
-      <button class="Login" @click="queryById">按照ID检索商品</button>
+      <button class="Login" @click="queryById">按照ID检索订单</button>
       <table v-if="responseGoods" class="goods-table">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>名称</th>
-          <th>价格</th>
-          <th>库存</th>
-          <th>描述</th>
+          <th>订单ID</th>
+          <th>用户ID</th>
+          <th>订单金额</th>
+          <th>创建时间</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>{{ responseGoods.orderId }}</td>
-          <td>{{ responseGoods.orderName }}</td>
+          <td>{{ responseGoods.userId }}</td>
           <td>{{ responseGoods.orderPrice }}</td>
-          <td>{{ responseGoods.orderNum }}</td>
-          <td>{{ responseGoods.goodsDescription }}</td>
+          <td>{{ responseGoods.createTime }}</td>
         </tr>
       </tbody>
     </table>
@@ -49,7 +47,7 @@ const responseGoods = ref(null)
 const testButton = async () => {
   try {
     // 发送 POST 请求到后端
-    const response = await request.post('/user/test?name=dujiacun', {
+    const response = await request.post('/users/test?name=dujiacun', {
     })
 
     if(response.data.code === 200){
@@ -70,14 +68,14 @@ const testButton = async () => {
 const queryById = async () => {
   try {
     // 发送 get 请求到后端
-    const response = await request.get(`/order/${shopId.value}?name=dujiacun`)
+    const response = await request.get(`/orders/${shopId.value}?name=dujiacun`)
 
     if(response.data.code === 200){
     responseGoods.value = response.data.data
     error.value = ''
-    success.value = 'getGoods successful'
+    success.value = response.data.message
     }else{
-    responseGoods.value = response.data
+    responseGoods.value = null
     error.value = response.data.message
     success.value = ''
     }
