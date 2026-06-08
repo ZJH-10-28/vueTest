@@ -1,4 +1,5 @@
 <template>
+    <button :style="{ position: 'fixed', top: '20px', right: '20px' }" class="Login" @click="exit" >安全退出</button>
   <div>
     <h2>Welcome</h2>
   </div>
@@ -7,7 +8,6 @@
     <router-link to="/welcome/child">子组件</router-link>
   </nav>
   <router-view />
-    <button class="Login" @click="testButton">报错退出</button>
     <div>
       <label>订单ID：</label>
       <input v-model="shopId">
@@ -44,27 +44,11 @@ const success = ref('')
 const shopId = ref('')
 const responseGoods = ref(null)
 
-const testButton = async () => {
-  try {
-    // 发送 POST 请求到后端
-    const response = await request.post('/users/test?name=dujiacun', {
-    })
-
-    if(response.data.code === 200){
-    error.value = ''
-    success.value = 'Test successful'
-    }else{
-    error.value = response.data.message
-    success.value = ''
-    }
-
-  }catch (err) {
-    if (err.response) {
-      // 后端返回了错误状态码（如 401）
-      error.value = err.response?.data || '登录失败，请检查网络'
-    }
-  }
+const exit = async () => {
+  localStorage.clear() // 清除 localStorage 中的所有数据
+  window.location.href = '/login' // 跳转到登录页
 }
+
 const queryById = async () => {
   try {
     // 发送 get 请求到后端

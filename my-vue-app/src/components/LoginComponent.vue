@@ -96,11 +96,12 @@ const handleLogin = async () => {
     success.value = response.data.message + 'Token:' + response.data.token
     // 跳转
     router.push('/welcome')
-    }else{
+    }
+    else{
     error.value = response.data.message
     success.value = ''
+    localStorage.clear() // 清除 localStorage 中的所有数据
     }
-    console.log('Token:', response.data.token)
 
   }
   catch (err) {
