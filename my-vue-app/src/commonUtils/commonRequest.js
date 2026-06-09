@@ -14,7 +14,7 @@ request.interceptors.request.use(
     const tokenHeader = localStorage.getItem('tokenHeader')
     const isAdmin = localStorage.getItem('isAdmin')
     if (token) {
-      config.headers['Authorization'] = tokenHeader + " " + token
+      config.headers['Authorization'] = tokenHeader + token
       config.headers['isAdmin'] = isAdmin
     }
     return config

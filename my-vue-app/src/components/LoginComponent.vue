@@ -1,5 +1,4 @@
 <template>
-      <p v-if="loginStatus" style="color: red">{{loginStatus}}</p>
   <div>
     <a>
       <img src="../assets/vue.svg" class="logo vue" alt="Vue logo" />
@@ -45,12 +44,9 @@ const form = ref({
 const router = useRouter()
 const error = ref('')
 const success = ref('')
-const loginStatus = ref(null)
 
 //初始化
 onMounted(() => {
-  // const status = localStorage.getItem('loginStatus')
-  // loginStatus.value = status // 或 JSON.parse(status) 如果存的是对象
   localStorage.removeItem('token') 
 })
 
@@ -92,6 +88,7 @@ const handleLogin = async () => {
     // 保存 token 到 localStorage
     localStorage.setItem('token', response.data.data.token)
     localStorage.setItem('tokenHeader', response.data.data.tokenHeader)
+    localStorage.setItem('isAdmin', response.data.data.isAdmin)
     error.value = ''
     success.value = response.data.message + 'Token:' + response.data.token
     // 跳转

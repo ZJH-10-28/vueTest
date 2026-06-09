@@ -1,13 +1,13 @@
 <template>
     <button :style="{ position: 'fixed', top: '20px', right: '20px' }" class="Login" @click="exit" >安全退出</button>
   <div>
-    <h2>Welcome</h2>
+    <h2 :style="{ position: 'fixed', top: '20px'}">Welcome</h2>
   </div>
-  <nav>
+  <!-- <nav>
     <router-link to="/welcome/parent">父组件</router-link> | 
     <router-link to="/welcome/child">子组件</router-link>
   </nav>
-  <router-view />
+  <router-view /> -->
     <div>
       <label>订单ID：</label>
       <input v-model="shopId">
@@ -36,13 +36,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref , onMounted } from 'vue'
 import request from '../commonUtils/commonRequest'
 
 const error = ref('')
 const success = ref('')
 const shopId = ref('')
 const responseGoods = ref(null)
+
+//初始化
+onMounted(() => {
+})
 
 const exit = async () => {
   localStorage.clear() // 清除 localStorage 中的所有数据
@@ -52,7 +56,8 @@ const exit = async () => {
 const queryById = async () => {
   try {
     // 发送 get 请求到后端
-    const response = await request.get(`/orders/${shopId.value}?name=dujiacun`)
+    // const response = await request.get(`/orders/${shopId.value}?name=dujiacun`)
+    const response = await request.get(`/users/userInfo?name=dujiacun`)
 
     if(response.data.code === 200){
     responseGoods.value = response.data.data
