@@ -12,8 +12,10 @@ request.interceptors.request.use(
     // 从 localStorage 获取 token
     const token = localStorage.getItem('token')
     const tokenHeader = localStorage.getItem('tokenHeader')
+    const isAdmin = localStorage.getItem('isAdmin')
     if (token) {
       config.headers['Authorization'] = tokenHeader + " " + token
+      config.headers['isAdmin'] = isAdmin
     }
     return config
   },
@@ -32,7 +34,6 @@ request.interceptors.response.use(
     if (error.response?.status === 401) {
       // token 无效或过期，跳转到登录页
       localStorage.clear()
-      localStorage.setItem('loginStatus', '请重新登录')
       window.location.href = '/login'
     }
     return Promise.reject(error)
