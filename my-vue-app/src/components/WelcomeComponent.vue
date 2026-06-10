@@ -56,8 +56,7 @@ const exit = async () => {
 const queryById = async () => {
   try {
     // 发送 get 请求到后端
-    // const response = await request.get(`/orders/${shopId.value}?name=dujiacun`)
-    const response = await request.get(`/users/userInfo?name=dujiacun`)
+    const response = await request.get(`/orders/${shopId.value}?name=dujiacun`)
 
     if(response.data.code === 200){
     responseGoods.value = response.data.data
