@@ -11,8 +11,9 @@
     <div>
       <label>订单ID：</label>
       <input v-model="shopId">
+      <button class="Login" @click="queryById">检索</button>
     </div>
-      <button class="Login" @click="queryById">按照ID检索订单</button>
+
       <table v-if="responseGoods" class="goods-table">
       <thead>
         <tr>
