@@ -5,6 +5,7 @@ import WelcomeComponent from '../components/WelcomeComponent.vue';
 import ChildComponent from '../components/ChildComponent.vue';
 import SkuComponent from '../components/SkuComponent.vue';
 import RegisterComponent from '../components/RegisterComponent.vue';
+import OrderComponent from '../components/OrderComponent.vue';
 
 // 1. 定义路由规则：路径 ↔ 组件
 const routes = [
@@ -26,12 +27,17 @@ const routes = [
   { 
     path: '/sku', 
     component: SkuComponent ,
-    meta: { requiresAuth: false}
+    meta: { requiresAuth: true} // 登录页需要认证
+  }, 
+  { 
+    path: '/order', 
+    component: OrderComponent ,
+    meta: { requiresAuth: true}
   }, 
   { 
     path: '/welcome', 
     component: WelcomeComponent ,
-    meta: { requiresAuth: true}, // 登录页需要认证
+    meta: { requiresAuth: true}, 
     // 嵌套路由
     children: [ 
       {

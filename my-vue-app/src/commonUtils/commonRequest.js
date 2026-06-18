@@ -34,7 +34,7 @@ request.interceptors.response.use(
     if (error.response?.status === 401) {
       // token 无效或过期，跳转到登录页
       localStorage.clear()
-      window.location.href = '/login'
+      window.location.href = '/register'
     }
     return Promise.reject(error)
   }

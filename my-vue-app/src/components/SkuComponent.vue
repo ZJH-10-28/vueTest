@@ -21,7 +21,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6" style="display: flex; align-items: center; justify-content: flex-end;">
-            <el-button type="primary" @click="handleSearch" icon="Search">查询</el-button>
+            <el-button type="primary" @click="handleSearch" icon="Search" >查询</el-button>
             <el-button @click="resetForm" icon="Refresh">重置</el-button>
           </el-col>
         </el-row>
@@ -29,7 +29,8 @@
     </el-card>
 
     <el-card shadow="hover" class="result-card">
-      <el-table :data="tableData" border style="width: 100%" v-loading="loading">
+      <el-table :data="tableData" border style="width: 100%" v-loading="loading" @selection-change="handleSelectionChange" ref="multipleTableRef">
+        <el-table-column type="selection" width="55" />
         <el-table-column prop="skuId" label="商品ID" width="100" />
         <el-table-column prop="skuName" label="商品名称" min-width="150" />
         <el-table-column prop="skuDescription" label="商品介绍" min-width="200" />
@@ -38,6 +39,13 @@
         <el-table-column prop="saleCount" label="销量" width="100" />
         <el-table-column prop="skuStockCount" label="库存" width="100" />
       </el-table>
+
+    <div class="batch-operation" style="margin-top: 20px; text-align: center;">
+      <el-button type="primary" @click="handleSelectedData">
+        结算
+      </el-button>
+    </div>
+
       <el-pagination
         v-if="tableData.length > 0"
         class="pagination"
@@ -54,13 +62,42 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted, nextTick } from 'vue';
 import axios from 'axios';
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import request from '../commonUtils/commonRequest'
 
-// 搜索表单数据模型 (对应DTO的部分字段)
+const router = useRouter()
+const multipleTableRef = ref();
+
+onMounted(() => {
+  handleSearch(); // 初始化表格数据
+});
+
+const selectedRows = ref([]);
+const handleSelectionChange = (selection) => {
+  // `selection` 是当前选中行的数组
+  selectedRows.value = selection;
+  console.log('选中的行数据:', selectedRows.value);
+};
+
+const handleSelectedData = () => {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning('请先选择商品');
+    return;
+  }
+  // 这里可以处理选中的数据，例如发送到后端
+//   console.log('准备处理选中的数据:', selectedRows.value);
+  // 示例：提取所有选中行的 skuId
+//   const selectedIds = selectedRows.value.map(item => item.skuId);
+//   console.log('选中的商品ID列表:', selectedIds);
+  // 在这里调用您的 API 或执行其他业务逻辑
+
+    localStorage.setItem('selectedCartItems', JSON.stringify(selectedRows.value.map(item => ({...item, quantity: 1}))));
+    router.push('/order');
+};
+
 const searchForm = reactive({
   skuId: '',
   skuName: '',
@@ -93,13 +130,14 @@ const handleSearch = async () => {
   const response = await request.post('http://localhost:12345/skus/skuList?name=dujiacun', params)
     if (response.data.code === 200) {
         tableData.value = response.data.data == null? [] : response.data.data;
-        total.value = response.data.data;
+        total.value = response.data.total || 0;
     } else {
         tableData.value = [];
         total.value = 0;
     }
     loading.value = false;
 
+    await checkStoredItemsAndSelect();
 };
 
 /**
@@ -126,6 +164,31 @@ const handleSizeChange = (newSize) => {
 const handleCurrentChange = (newPage) => {
   currentPage.value = newPage;
   handleSearch(); // 重新查询
+};
+
+// 定义检查并勾选的函数
+const checkStoredItemsAndSelect = async () => {
+  // 从 localStorage 获取之前保存的选中商品数组
+  const storedItems = localStorage.getItem('selectedCartItems');
+  if (storedItems) {
+    // 解析 JSON 字符串为 JavaScript 对象
+    const cartItems = JSON.parse(storedItems);
+    // 提取出所有需要被选中的商品ID
+    const skuIdsToSelect = cartItems.map(item => item.skuId);
+
+    // 确保 tableData 已经加载完成并渲染到DOM
+    await nextTick();
+    
+    // 遍历表格数据中的每一行
+    tableData.value.forEach(row => {
+      // 如果当前行的 skuId 在需要被选中的ID列表中
+      if (skuIdsToSelect.includes(row.skuId)) {
+        // 使用表格实例的 toggleRowSelection 方法进行勾选
+        // 第二个参数 `true` 表示选中，`false` 表示取消选中
+        multipleTableRef.value?.toggleRowSelection(row, true);
+      }
+    });
+  }
 };
 
 </script>
