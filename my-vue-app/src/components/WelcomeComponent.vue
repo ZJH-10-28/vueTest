@@ -51,7 +51,7 @@ onMounted(() => {
 
 const exit = async () => {
   localStorage.clear() // 清除 localStorage 中的所有数据
-  window.location.href = '/login' // 跳转到登录页
+  window.location.href = '/register' // 跳转到注册页
 }
 
 const queryById = async () => {
