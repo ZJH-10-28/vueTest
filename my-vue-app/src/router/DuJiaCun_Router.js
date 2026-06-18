@@ -3,18 +3,30 @@ import LoginComponent from "../components/LoginComponent.vue";
 import ParentComponent from "../components/ParentComponent.vue";
 import WelcomeComponent from '../components/WelcomeComponent.vue';
 import ChildComponent from '../components/ChildComponent.vue';
+import SkuComponent from '../components/SkuComponent.vue';
+import RegisterComponent from '../components/RegisterComponent.vue';
 
 // 1. 定义路由规则：路径 ↔ 组件
 const routes = [
   { 
     path: '/', 
-    component: LoginComponent ,
+    component: RegisterComponent ,
     meta: { requiresAuth: false} // 登录页不需要认证
   }, 
+  // { 
+  //   path: '/login', 
+  //   component: LoginComponent ,
+  //   meta: { requiresAuth: false} // 登录页不需要认证
+  // }, 
   { 
-    path: '/login', 
-    component: LoginComponent ,
-    meta: { requiresAuth: false} // 登录页不需要认证
+    path: '/register', 
+    component: RegisterComponent ,
+    meta: { requiresAuth: false}
+  }, 
+  { 
+    path: '/sku', 
+    component: SkuComponent ,
+    meta: { requiresAuth: false}
   }, 
   { 
     path: '/welcome', 
@@ -59,7 +71,7 @@ DuJiaCun_Router.beforeEach((to, from, next) => {
     next('/')
   } else if (to.path === '/' && token) {
     // 已登录用户访问登录页 → 跳转到主页
-    next('/welcome')
+    next('/sku')
   } else {
     // 其他情况正常放行
     next()
