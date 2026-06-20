@@ -4,7 +4,7 @@
     <div class="auth-left">
         <div class="content">
         <h2 class="title">欢迎光临度假村!</h2>
-        <p class="subtitle">1</p>
+        <p class="subtitle">个人学习用</p>
         </div>
     </div>
 

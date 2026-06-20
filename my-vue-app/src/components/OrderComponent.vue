@@ -72,6 +72,7 @@ const removeItem = (index) => {
 
 // 4. 结算
 const checkout = async () => {
+    loading.value = true;
 
   if (selectedCartItems.value.length === 0) {
     ElMessage.warning('购物车为空，无法结算！');
@@ -87,7 +88,6 @@ const checkout = async () => {
 
     const params = {skuStockList};
     const response = await request.post('http://localhost:12345/orders/orderInfo?name=dujiacun', params)
-    loading.value = true;
     if (response.data.code === 200) {
         ElMessage.success('结算成功: ' + response.data.message);
         orderId.value = response.data.data;

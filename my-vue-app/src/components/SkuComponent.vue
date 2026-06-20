@@ -2,6 +2,11 @@
     <button :style="{ position: 'fixed', top: '20px', right: '20px' }" class="Login" @click="exit" >安全退出</button>
   <div class="sku-query-container">
     <h2>商品信息查询</h2>
+    <div class="batch-operation" style="margin-top: 20px; text-align: right;">
+      <el-button type="primary" text-align: right; @click="returnBack">
+        个人中心
+      </el-button>
+    </div>
     <el-card shadow="hover" class="search-card">
       <el-form :model="searchForm" label-width="100px" @submit.prevent="handleSearch">
         <el-row :gutter="20">
@@ -70,7 +75,9 @@ import request from '../commonUtils/commonRequest'
 
 const router = useRouter()
 const multipleTableRef = ref();
-
+const returnBack = () => {
+  router.push('/user');
+};
 onMounted(() => {
   handleSearch(); // 初始化表格数据
 });

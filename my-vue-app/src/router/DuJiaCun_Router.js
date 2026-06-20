@@ -6,6 +6,7 @@ import ChildComponent from '../components/ChildComponent.vue';
 import SkuComponent from '../components/SkuComponent.vue';
 import RegisterComponent from '../components/RegisterComponent.vue';
 import OrderComponent from '../components/OrderComponent.vue';
+import UserComponent from '../components/UserComponent.vue';
 
 // 1. 定义路由规则：路径 ↔ 组件
 const routes = [
@@ -32,6 +33,11 @@ const routes = [
   { 
     path: '/order', 
     component: OrderComponent ,
+    meta: { requiresAuth: true}
+  }, 
+  { 
+    path: '/user', 
+    component: UserComponent ,
     meta: { requiresAuth: true}
   }, 
   { 
