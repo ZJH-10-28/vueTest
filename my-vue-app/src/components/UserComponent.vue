@@ -46,7 +46,7 @@
             </div>
           </template>
           <el-table 
-            :data="currentOrders" 
+            :data="orders" 
             border 
             style="width: 100%"
             row-key="orderId"
@@ -67,7 +67,7 @@
             </el-table-column>
 
             <el-table-column prop="orderId" label="订单号" width="200" />
-            <el-table-column prop="orderPrice" label="总价" width="120" />
+            <el-table-column prop="orderPrice" label="总价" width="100" />
             <el-table-column prop="orderStatus" label="状态" width="100" />
             <el-table-column prop="createTime" label="下单时间" width="200" />
           </el-table>
@@ -75,10 +75,12 @@
         
           <!-- 分页组件 -->
           <el-pagination
-            v-if="orders.length > 0"
+            v-if="total > 0"
             background
             layout="total, sizes, prev, pager, next, jumper"
-            :total="orders.length "
+            :total="total"
+            :page-size="pageSize"
+            :current-page="currentPage" 
             v-model:page-size="pageSize"
             v-model:current-page="currentPage"
             @size-change="handleSizeChange"
@@ -95,13 +97,14 @@ import request from '../commonUtils/commonRequest';
 import { useRouter } from 'vue-router'
 
 onMounted(() => {
-  fetchData();
+  handleSearch();
 });
 
 const router = useRouter()
 const returnBack = () => {
   router.back(); // 调用路由实例的 back() 方法
 };
+const total = ref(0);
 // 1. 定义用户信息和订单数据模型
 const userInfo = ref({
   userId: '',
@@ -115,12 +118,6 @@ const expandRowKeys = ref([]); // 用于控制哪些行是展开状态
 // 分页相关变量
 const currentPage = ref(1);
 const pageSize = ref(10);
-// 计算属性，获取当前页的订单数据
-const currentOrders = computed(() => {
-  const start = (currentPage.value - 1) * pageSize.value;
-  const end = start + pageSize.value;
-  return orders.value.slice(start, end);
-});
 
 /**
  * 分页大小改变处理
@@ -139,22 +136,25 @@ const handleCurrentChange = (newPage) => {
 };
 
 // 2. 模拟从后端获取数据
-const fetchData = async () => {
+const handleSearch = async () => {
   try {
     // const params = { userId: localStorage.getItem('userId') };
     const response = await request.post('http://localhost:12345/orders/orderInfoByUserId?name=dujiacun', {
-      userId: 10010
+      userId: 10010,
+      pageNum: currentPage.value,
+      pageSize: pageSize.value
     })
     if (response.data.code === 200) {
-        orders.value = response.data.data;
+        orders.value = response.data.data.list || [];
+        total.value = response.data.data.total || 0; 
+    console.log('orders.value:', orders.value);
+    console.log('currentPage.value:', currentPage.value);
         orders.value.forEach(order => {
           order.orderId = 'ORD' + order.orderId.toString().padStart(11, '0'); // 格式化订单ID
           order.createTime = formatDate(order.createTime);
           order.orderStatus = order.orderStatus === 0 ? '待支付' : order.orderStatus === 1 ? '已支付' : '已取消'; // 转换订单状态为文本
         });
-    } else {
-    }
-
+        
     // 用户数据
     userInfo.value = {
       userId: localStorage.getItem('userId'),
@@ -162,6 +162,12 @@ const fetchData = async () => {
       isAdmin: localStorage.getItem('isAdmin'),
       lastLoginDate: localStorage.getItem('lastLoginDate')
     };
+    } 
+    
+    else {
+    console.error('获取数据失败:', response.data.message);
+    }
+
 
   } catch (error) {
     console.error('获取数据失败:', error);
