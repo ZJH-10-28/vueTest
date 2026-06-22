@@ -76,6 +76,7 @@ const checkout = async () => {
 
   if (selectedCartItems.value.length === 0) {
     ElMessage.warning('购物车为空，无法结算！');
+    loading.value = false;
     return;
   }
 

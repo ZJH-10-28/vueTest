@@ -46,8 +46,8 @@
       </el-table>
 
     <div class="batch-operation" style="margin-top: 20px; text-align: center;">
-      <el-button type="primary" @click="handleSelectedData">
-        结算
+      <el-button type="warning" @click="handleSelectedData">
+        去结算
       </el-button>
     </div>
 

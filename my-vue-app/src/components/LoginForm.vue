@@ -52,6 +52,9 @@ const submitForm = async () => {
     localStorage.setItem('token', response.data.data.token)
     localStorage.setItem('tokenHeader', response.data.data.tokenHeader)
     localStorage.setItem('isAdmin', response.data.data.isAdmin)
+    localStorage.setItem('userName', response.data.data.userName)
+    localStorage.setItem('userId', form.userId)
+    localStorage.setItem('lastLoginDate', new Date())
 
     // 跳转
     router.push('/sku')
