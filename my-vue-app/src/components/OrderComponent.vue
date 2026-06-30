@@ -103,8 +103,8 @@ const checkout = async () => {
     } else {
         ElMessage.error('结算失败: ' + response.data.message);
         orderId.value = '';
-        tableData.value = [];
-        total.value = 0;
+        // tableData.value = [];
+        // total.value = 0;
     }
     loading.value = false;
 
