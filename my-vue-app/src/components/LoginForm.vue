@@ -1,7 +1,7 @@
 <template>
   <el-form :model="form" :rules="rules" label-width="80px" ref="loginFormRef">
-    <el-form-item label="用户ID" prop="userId">
-      <el-input v-model="form.userId" placeholder="请输入用户ID" clearable />
+    <el-form-item label="用户名" prop="userName">
+      <el-input v-model="form.userName" placeholder="请输入用户名" clearable />
     </el-form-item>
     <el-form-item label="密码" prop="password">
       <el-input
@@ -26,12 +26,12 @@ import request from '../commonUtils/commonRequest'
 
 const router = useRouter()
 const form = reactive({
-  userId: '',
+  userName: '',
   password: ''
 });
 
 const rules = reactive({
-  userId: [{ required: true, message: '用户ID不能为空', trigger: 'blur' }],
+  userName: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
   password: [{ required: true, message: '密码不能为空', trigger: 'blur' }]
 });
 
@@ -42,7 +42,7 @@ const submitForm = async () => {
     await loginFormRef.value.validate();
     console.log('登录成功，参数:', form);
     const response = await request.post('http://localhost:12345/users/login?name=dujiacun', {
-      userName: form.userId,
+      userName: form.userName,
       passWord: form.password
     })
 
@@ -52,8 +52,8 @@ const submitForm = async () => {
     localStorage.setItem('token', response.data.data.token)
     localStorage.setItem('tokenHeader', response.data.data.tokenHeader)
     localStorage.setItem('isAdmin', response.data.data.isAdmin)
-    localStorage.setItem('userName', response.data.data.userName)
-    localStorage.setItem('userId', form.userId)
+    localStorage.setItem('userName', form.userName)
+    localStorage.setItem('userId', response.data.data.userId)
     localStorage.setItem('lastLoginDate', new Date())
 
     // 跳转
