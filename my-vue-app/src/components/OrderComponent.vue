@@ -29,7 +29,7 @@
     <div class="cart-footer" style="margin-top: 20px; text-align: right;">
       <p v-if="orderId" style="color: green">订单号: {{ orderId }}</p>
       <span style="margin-right: 20px;">总价: <strong>{{ totalPrice.toFixed(2) }}</strong> 元</span>
-      <el-button type="warning" size="large" @click="checkout">下单</el-button>
+      <el-button type="warning" size="large" :loading="loading" :disabled="loading" @click="checkout">下单</el-button>
     </div>
   </div>
 </template>
@@ -39,6 +39,11 @@ import { ref, reactive, onMounted, computed } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router'
 import request from '../commonUtils/commonRequest'
+import {
+  buildOrderRequestConfig,
+  clearOrderIdempotencyState,
+  getOrCreateOrderIdempotencyKey,
+} from '../commonUtils/orderIdempotency'
 
 const router = useRouter()
 const returnBack = () => {
@@ -72,42 +77,71 @@ const removeItem = (index) => {
 
 // 4. 结算
 const checkout = async () => {
-    loading.value = true;
-
   if (selectedCartItems.value.length === 0) {
     ElMessage.warning('购物车为空，无法结算！');
-    loading.value = false;
     return;
   }
 
-    const skuStockList = selectedCartItems.value.map(item => ({
-        skuId: item.skuId,
-        saleCount: item.quantity,
-        skuPrice: item.skuPrice,
-        couponId: null,
-        }));
+  const userId = localStorage.getItem('userId');
+  if (!userId) {
+    ElMessage.error('登录信息已失效，请重新登录');
+    return;
+  }
 
-    const params = {skuStockList};
-    const response = await request.post('http://localhost:12345/orders/orderInfo?name=dujiacun', params)
+  loading.value = true;
+  const skuStockList = selectedCartItems.value.map(item => ({
+    skuId: item.skuId,
+    saleCount: item.quantity,
+    skuPrice: item.skuPrice,
+    couponId: null,
+  }));
+  const params = {skuStockList};
+
+  try {
+    // 同一用户和订单内容在网络重试时复用幂等键，避免生成重复订单。
+    const idempotencyKey = getOrCreateOrderIdempotencyKey(
+      userId,
+      params,
+      sessionStorage,
+    );
+    const response = await request.post(
+      'http://localhost:12345/orders/orderInfo?name=dujiacun',
+      params,
+      buildOrderRequestConfig(idempotencyKey),
+    )
     if (response.data.code === 200) {
-        ElMessage.success('结算成功: ' + response.data.message);
-        orderId.value = response.data.data;
+      ElMessage.success('结算成功: ' + response.data.message);
+      orderId.value = response.data.data;
+      clearOrderIdempotencyState(userId, sessionStorage);
 
-        //删除cartItems中selectedCartItems包含的商品
-        cartItems.value = cartItems.value.filter(item => 
-            !selectedCartItems.value.some(selectedItem => selectedItem.skuId === item.skuId)
-        );
+      //删除cartItems中selectedCartItems包含的商品
+      cartItems.value = cartItems.value.filter(item =>
+        !selectedCartItems.value.some(selectedItem => selectedItem.skuId === item.skuId)
+      );
 
-        localStorage.setItem('selectedCartItems', JSON.stringify(cartItems.value));
-        selectedCartItems.value = [];
+      localStorage.setItem('selectedCartItems', JSON.stringify(cartItems.value));
+      selectedCartItems.value = [];
+    } else if (response.data.code === 429) {
+      ElMessage.warning(response.data.message || '订单处理中，请勿重复提交');
+    } else if (response.data.code === 409) {
+      // 服务端发现幂等键与请求内容冲突时清理旧状态，允许用户重新提交。
+      clearOrderIdempotencyState(userId, sessionStorage);
+      ElMessage.error(response.data.message || '订单内容已变化，请重新提交');
     } else {
-        ElMessage.error('结算失败: ' + response.data.message);
-        orderId.value = '';
-        // tableData.value = [];
-        // total.value = 0;
+      ElMessage.error('结算失败: ' + response.data.message);
+      orderId.value = '';
+      // tableData.value = [];
+      // total.value = 0;
     }
+  } catch (error) {
+    if (error.response?.status === 429) {
+      ElMessage.warning('请求过于频繁，订单可能仍在处理中，请稍后重试');
+    } else {
+      ElMessage.error(error.response?.data?.message || '结算失败，请检查网络后重试');
+    }
+  } finally {
     loading.value = false;
-
+  }
 };
 </script>
 
