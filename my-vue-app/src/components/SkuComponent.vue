@@ -34,8 +34,9 @@
     </el-card>
 
     <el-card shadow="hover" class="result-card">
-      <el-table :data="tableData" border style="width: 100%" v-loading="loading" @selection-change="handleSelectionChange" ref="multipleTableRef">
-        <el-table-column type="selection" width="55" />
+      <!-- 使用商品 ID 作为行键，确保翻页后仍能保留已选择的商品。 -->
+      <el-table :data="tableData" row-key="skuId" border style="width: 100%" v-loading="loading" @selection-change="handleSelectionChange" ref="multipleTableRef">
+        <el-table-column type="selection" width="55" :reserve-selection="true" />
         <el-table-column prop="skuId" label="商品ID" width="100" />
         <el-table-column prop="skuName" label="商品名称" min-width="150" />
         <el-table-column prop="skuDescription" label="商品介绍" min-width="200" />
@@ -123,28 +124,48 @@ const exit = async () => {
   window.location.href = '/register'
 }
 
-const handleSearch = async () => {
+/**
+ * 按照当前查询条件和分页状态加载商品数据
+ */
+const loadSkuPage = async () => {
   loading.value = true;
-    
+
   console.log('执行查询，参数:', searchForm);
 
-     const params = {
-      ...searchForm,
-      pageNum: currentPage.value,
-      pageSize: pageSize.value
-    };
-  
-  const response = await request.post('http://localhost:12345/skus/skuList?name=dujiacun', params)
-    if (response.data.code === 200) {
-        tableData.value = response.data.data == null? [] : response.data.data;
-        total.value = response.data.total || 0;
-    } else {
-        tableData.value = [];
-        total.value = 0;
-    }
-    loading.value = false;
+  const params = {
+    ...searchForm,
+    pageNum: currentPage.value,
+    pageSize: pageSize.value
+  };
 
-    await checkStoredItemsAndSelect();
+  try {
+    const response = await request.post('http://localhost:12345/skus/skuList?name=dujiacun', params)
+    if (response.data.code === 200) {
+      tableData.value = response.data.data?.list || [];
+      total.value = response.data.data?.total || 0;
+      await checkStoredItemsAndSelect();
+    } else {
+      tableData.value = [];
+      total.value = 0;
+      ElMessage.warning(response.data.message || '检索不到商品');
+    }
+  } catch (error) {
+    tableData.value = [];
+    total.value = 0;
+    console.error('商品信息查询失败:', error);
+    ElMessage.error('商品信息查询失败，请稍后重试');
+  } finally {
+    // 无论查询成功还是失败，都必须结束表格加载状态。
+    loading.value = false;
+  }
+};
+
+/**
+ * 使用新的查询条件时从第一页开始检索
+ */
+const handleSearch = async () => {
+  currentPage.value = 1;
+  await loadSkuPage();
 };
 
 /**
@@ -162,7 +183,8 @@ const resetForm = () => {
  */
 const handleSizeChange = (newSize) => {
   pageSize.value = newSize;
-  handleSearch(); // 重新查询
+  currentPage.value = 1;
+  loadSkuPage(); // 修改每页数量后从第一页重新查询
 };
 
 /**
@@ -170,7 +192,7 @@ const handleSizeChange = (newSize) => {
  */
 const handleCurrentChange = (newPage) => {
   currentPage.value = newPage;
-  handleSearch(); // 重新查询
+  loadSkuPage(); // 查询指定页码
 };
 
 // 定义检查并勾选的函数
